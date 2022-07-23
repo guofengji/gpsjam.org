@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path')
 
 const Mutex = require('async-mutex').Mutex;
+const compression = require('compression');
 const express = require("express");
 const LRU = require('lru-cache');
 const puppeteer = require("puppeteer");
@@ -9,6 +10,11 @@ const puppeteer = require("puppeteer");
 const PORT = process.env.PORT || 3000;
 
 app = express();
+
+// Use gzip-compression. It might be nice if we pre-compressed the static assets
+// instead of using CPU on the fly, but practically the level of CPU used is
+// very small.
+app.use(compression())
 
 //setting view engine to ejs
 app.set("view engine", "ejs");
