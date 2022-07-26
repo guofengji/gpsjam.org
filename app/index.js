@@ -26,7 +26,7 @@ app.get("/", function (req, res) {
     let urlStr = 'https://gpsjam.org';
     urlStr += req.url;
     let previewUrl = 'https://gpsjam.org/images/gpsjam-card-preview.png';
-    let previewDesc = "Map showing potential GPS interference.";
+    let previewDesc = "Maps showing daily possible GPS interference.";
 
     const url = new URL(urlStr);
     const params = url.searchParams;
@@ -34,7 +34,7 @@ app.get("/", function (req, res) {
     const lat = parseFloat(params.get('lat'));
     const lon = parseFloat(params.get('lon'));
     if (lat && lon && zoom) {
-        previewDesc = "Map showing potential GPS interference around " + lat.toFixed(3) + ", " + lon.toFixed(3) + ".";
+        previewDesc = "Map showing possible GPS interference around " + lat.toFixed(3) + ", " + lon.toFixed(3) + ".";
         previewUrl = 'https://gpsjam.org/preview?u=' + encodeURIComponent(urlStr);
     }
     res.render("index", { url: urlStr, previewUrl, previewDesc });
