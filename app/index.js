@@ -25,8 +25,18 @@ app.use(express.static('public'));
 app.get("/", function (req, res) {
     let urlStr = 'https://gpsjam.org';
     urlStr += req.url;
-    const previewUrl = 'https://gpsjam.org/preview?u=' + encodeURIComponent(urlStr);
-    const previewDesc = "Map showing potential GPS interference.";
+    let previewUrl = 'https://gpsjam.org/images/gpsjam-card-preview.png';
+    let previewDesc = "Map showing potential GPS interference.";
+
+    const url = new URL(urlStr);
+    const params = url.searchParams;
+    const zoom = parseFloat(params.get('z')) - 1.0;
+    const lat = parseFloat(params.get('lat'));
+    const lon = parseFloat(params.get('lon'));
+    if (lat && lon && zoom) {
+        previewDesc = "Map showing potential GPS interference around " + lat.toFixed(3) + ", " + lon.toFixed(3) + ".";
+        previewUrl = 'https://gpsjam.org/preview?u=' + encodeURIComponent(urlStr);
+    }
     res.render("index", { url: urlStr, previewUrl, previewDesc });
 });
 
