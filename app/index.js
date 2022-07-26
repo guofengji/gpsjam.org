@@ -173,27 +173,32 @@ app.get("/preview", async (req, res) => {
     const urlStr = req.query.u;
     console.log('Screenshotting ' + urlStr);
     const url = new URL(urlStr);
-    const params = url.searchParams;
-    // Since we're rendering using a (virtual) browser window that's much
-    // smaller than the size most people are looking at (800x418), as a hack we
-    // zoom out a bit to still kinda show the same general region.
-    const zoom = parseFloat(params.get('z')) - 1.0;
-    const lat = parseFloat(params.get('lat'));
-    const lon = parseFloat(params.get('lon'));
-    if ((lat && !lon) || (!lat && lon)) {
-        // Return a 404 if the query params are incomplete. The slackbot agent
-        // always makes additional requests for mangled versions of the URL and
-        // I don't know why, and we don't want to spend the resources to render
-        // broken versions of the map.
-        console.log('Incomplete query params.');
-        res.status(404).send('Incomplete query params');
-        return;
+    // If the domain isn't gpsjam.org, reject it.
+    if (url.host !== 'gpsjam.org') {
+        res.status(400).send('Nice try.');
+    } else {
+        const params = url.searchParams;
+        // Since we're rendering using a (virtual) browser window that's much
+        // smaller than the size most people are looking at (800x418), as a hack we
+        // zoom out a bit to still kinda show the same general region.
+        const zoom = parseFloat(params.get('z')) - 1.0;
+        const lat = parseFloat(params.get('lat'));
+        const lon = parseFloat(params.get('lon'));
+        if ((lat && !lon) || (!lat && lon)) {
+            // Return a 404 if the query params are incomplete. The slackbot agent
+            // always makes additional requests for mangled versions of the URL and
+            // I don't know why, and we don't want to spend the resources to render
+            // broken versions of the map.
+            console.log('Incomplete query params.');
+            res.status(404).send('Incomplete query params');
+            return;
+        }
+        params.set('z', zoom.toString());
+        params.set('screenshot', '');
+        const imageBuf = await previewer.getPreview(url);
+        console.log('Screenshot took ' + (Date.now() - startTime) + 'ms');
+        res.setHeader('Content-Type', 'image/png');
+        res.send(imageBuf);
     }
-    params.set('z', zoom.toString());
-    params.set('screenshot', '');
-    const imageBuf = await previewer.getPreview(url);
-    console.log('Screenshot took ' + (Date.now() - startTime) + 'ms');
-    res.setHeader('Content-Type', 'image/png');
-    res.send(imageBuf);
 });
 
