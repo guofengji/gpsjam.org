@@ -184,7 +184,7 @@ app.get("/preview", async (req, res) => {
         const zoom = parseFloat(params.get('z')) - 1.0;
         const lat = parseFloat(params.get('lat'));
         const lon = parseFloat(params.get('lon'));
-        if (!lat || !lon || Number.isNan(zoom)) {
+        if (!lat || !lon || Number.isNaN(zoom)) {
             // Return a 404 if the query params are incomplete. The slackbot agent
             // always makes additional requests for mangled versions of the URL and
             // I don't know why, and we don't want to spend the resources to render
