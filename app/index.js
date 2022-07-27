@@ -63,6 +63,8 @@ class Previewer {
         this.browser = null;
         this.browserUseCount = 0;
         this.cache = new LRU({ max: 100 });
+        this.cacheHits = 0;
+        this.cacheMisses = 0;
         this.browserMutex = new Mutex();
         this.urlsInProgress = {};
     }
@@ -73,21 +75,23 @@ class Previewer {
             const cachedImage = this.cache.get(urlStr);
             if (cachedImage) {
                 // If the url is already in the cache, we're done.
-                console.log(`Cache hit for screenshot of url ${url}`);
+                this.cacheHits += 1;
+                console.log(`Cache hit for screenshot of url ${url}. Hit rate ${(this.cacheHits / (this.cacheHits + this.cacheMisses)).toFixed(2)}`);
                 resolve(cachedImage);
             } else {
                 if (this.urlsInProgress[urlStr]) {
                     // If someone else is already rendering this url, wait for
                     // them to finish then get it from the cache.
                     this.urlsInProgress[urlStr].push({ resolve, reject });
-                    console.log(`Waiting for screenshot of ${url}, already in progress.`);
+                    console.log(`Waiting for screenshot of ${url}, already in progress. Queue has ${Object.keys(this.urlsInProgress).length} items.`);
                 } else {
                     // OK, fine, it's up to us to render this url.
-                    console.log(`Getting screenshot of ${url}`);
+                    this.cacheMisses += 1;
+                    console.log(`Getting screenshot of ${url}. Cache hit rate ${(this.cacheHits / (this.cacheHits + this.cacheMisses)).toFixed(2)}`);
                     this.urlsInProgress[urlStr] = [{ resolve, reject }];
                     const image = await this.getPreviewInternal(url);
                     this.cache.set(urlStr, image);
-                    console.log(`Cache now has ${this.cache.size} entries. Queue has ${Object.keys(this.urlsInProgress).length} entries.`);
+                    console.log(`Cache now has ${this.cache.size} entries. Queue has ${Object.keys(this.urlsInProgress).length - 1} entries.`);
                     // Notify anyone else who was waiting for this url (since
                     // we've put the image in the cache, no more requests will
                     // be added to the queue for this url so urlsInProgress
@@ -102,6 +106,7 @@ class Previewer {
     }
 
     async getPreviewInternal(url) {
+        const startTime = Date.now();
         // Use the browserMutex to ensure we only ever screenshot one url at a
         // time.
         return await this.browserMutex.runExclusive(async () => {
@@ -133,13 +138,14 @@ class Previewer {
 
             // tell the page to visit the url
             await page.goto(url.toString());
-            const startTime = Date.now();
+            const pageStartTime = Date.now();
             await this.waitForScreenshotReady(page);
-            console.log('Screenshot ready in ' + (Date.now() - startTime) + 'ms');
+            console.log('Page ready in ' + (Date.now() - pageStartTime) + 'ms');
             // take a screenshot and save it in the screenshots directory
             const imageBuf = await page.screenshot();
             // close the browser
             await page.close();
+            console.log("Fresh screenshot time " + (Date.now() - startTime) + "ms");
             return imageBuf;
         });
     }
@@ -175,6 +181,7 @@ app.get("/preview", async (req, res) => {
     const url = new URL(urlStr);
     // If the domain isn't gpsjam.org, reject it.`
     if (url.host !== 'gpsjam.org') {
+        console.log('Nice try.');
         res.status(400).send('Nice try.');
     } else {
         const params = url.searchParams;
