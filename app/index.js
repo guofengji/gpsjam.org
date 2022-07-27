@@ -173,7 +173,7 @@ app.get("/preview", async (req, res) => {
     const urlStr = req.query.u;
     console.log('Screenshotting ' + urlStr);
     const url = new URL(urlStr);
-    // If the domain isn't gpsjam.org, reject it.
+    // If the domain isn't gpsjam.org, reject it.`
     if (url.host !== 'gpsjam.org') {
         res.status(400).send('Nice try.');
     } else {
@@ -184,7 +184,7 @@ app.get("/preview", async (req, res) => {
         const zoom = parseFloat(params.get('z')) - 1.0;
         const lat = parseFloat(params.get('lat'));
         const lon = parseFloat(params.get('lon'));
-        if ((lat && !lon) || (!lat && lon)) {
+        if (!lat || !lon || Number.isNan(zoom)) {
             // Return a 404 if the query params are incomplete. The slackbot agent
             // always makes additional requests for mangled versions of the URL and
             // I don't know why, and we don't want to spend the resources to render
