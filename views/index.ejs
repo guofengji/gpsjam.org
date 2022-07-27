@@ -381,7 +381,7 @@
             url.searchParams.set('lon', lon);
             url.searchParams.set('z', zoom);
             url.searchParams.set('date', dateStr);
-            window.history.pushState({}, '', url.href);
+            window.history.replaceState({}, '', url.href);
         }
 
         async function loadManifest() {
