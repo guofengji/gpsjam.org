@@ -1,24 +1,60 @@
 <html>
 
 <head>
-    <title>About GPSJam</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="About GPSJam" />
+    <meta property="og:description" content="GPSJam About Page" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://gpsjam.org/about/" />
+
+    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400">
+
+    <title>GPSJam FAQ</title>
 </head>
 
 <body>
-    <img src="/images/gpsjam-logo-256x185.png" alt="GPSJam Logo" width="256" height="185">
-    <p>
-        Created by John Wiseman (<a href="https://twitter.com/lemonodor">@lemonodor</a>) in July 2022.
-    </p>
-    <p>This site uses data provided by <a href="https://adsbexchange.com/">ADS-B
-            Exchange</a> to generate maps of likely GPS interference, based on aircraft
-        reports of their navigation system accuracy.
-    </p>
+    <div id="innerWrapper">
+        <div id="titleArea">
+            <div id="siteTitle">
+                GPSJam
+            </div>
+            <div id="contactInfo">
+                John Wiseman
+                <a href="mailto:jjwiseman@gmail.com">jjwiseman@gmail.com</a>
+                <a href="https://twitter.com/lemonodor">@lemonodor</a>
+            </div>
+            <div class="topnav" id="myTopnav">
+                <a href="/" class="">Home</a>
+                <a href="/about/" class="">About</a>
+                <a href="/faq/" class="active">FAQ</a>
+                <a href="https://skycircl.es/donate-nerd-mode" class="">Donate</a>
+                <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="content">
+            <h1>About</h1>
+            <p>
+                This site was created by John Wiseman (<a href="https://twitter.com/lemonodor">@lemonodor</a>) in July
+                2022.
+            </p>
+            <p>The maps uses data provided by <a href="https://adsbexchange.com/">ADS-B
+                    Exchange</a> to generate maps of likely GPS interference, based on aircraft
+                reports of their navigation system accuracy.
+            </p>
 
-    <p>If you would like to support my efforts to create sites like this one
-        that make interesting information accessible, <a href="https://skycircl.es/donate-nerd-mode/">here is more
-            information</a>.
-        You may also want to consider <a href="https://www.adsbexchange.com/donate/">giving your support to ADS-B
-            Exchange</a>—I do!</p>
+            <p>If you would like to support my efforts to create sites like this one
+                that make interesting information accessible, <a href="https://skycircl.es/donate-nerd-mode/">here is
+                    more
+                    information</a>.
+                You may also want to consider <a href="https://www.adsbexchange.com/donate/">giving your support to
+                    ADS-B
+                    Exchange</a>—I do!</p>
+        </div>
+    </div>
 </body>
 
 </html>

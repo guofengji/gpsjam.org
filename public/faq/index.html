@@ -1,82 +1,141 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="GPSJam FAQ" />
+    <meta property="og:description" content="GPSJam Frequently Asked Questions" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://gpsjam.org/faq/" />
+
+    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400">
+
     <title>GPSJam FAQ</title>
 </head>
 
 <body>
-    <img src="/images/gpsjam-logo-256x185.png" alt="GPSJam Logo" width="256" height="185">
+    <div id="innerWrapper">
+        <div id="titleArea">
+            <div id="siteTitle">
+                GPSJam
+            </div>
+            <div id="contactInfo">
+                John Wiseman
+                <a href="mailto:jjwiseman@gmail.com">jjwiseman@gmail.com</a>
+                <a href="https://twitter.com/lemonodor">@lemonodor</a>
+            </div>
+            <div class="topnav" id="myTopnav">
+                <a href="/" class="">Home</a>
+                <a href="/about/" class="">About</a>
+                <a href="/faq/" class="active">FAQ</a>
+                <a href="https://skycircl.es/donate-nerd-mode" class="">Donate</a>
+                <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="content">
+            <h1>FAQ</h1>
 
-    <h1>FAQ</h1>
+            <nav id="TableOfContents">
+                <ul>
+                    <li><a href="#what-exactly-does-this-map-show">What exactly does this map show?</a></li>
+                    <li><a href="#what-is-the-source-of-your-data">What is the source of your data?</a></li>
+                    <li><a href="#what-can-cause-aircraft-to-report-low-accuracy">What can cause an aircraft to report
+                            low navigation
+                            accuracy?</a></li>
+                    <li><a href="#what-are-the-conflict-zones">What are the conflict zones where GPS jamming is
+                            regularly observed?</a></li>
+                    <li><a href="#what-time-zone">What time zone are the dates in?</a></li>
+                    <li><a href="#when-is-the-site-updated">When is the site updated with new data?</a></li>
+                    <li><a href="#i-live-in-one-of-the-red-zones">I live in one of the red zones and my GPS was
+                            fine?</a></li>
+                    <li><a href="#why-arent-there-red-or-green">Why aren't there red or green hexes on some parts of the
+                            map?</a></li>
+                </ul>
+            </nav>
 
-    <h2 id="what-exactly-does-this-map-show">What exactly does this map show?</h2>
+            <h2 id="what-exactly-does-this-map-show">What exactly does this map show?</h2>
 
-    <p>Many aircraft broadcast information about how accurate their navigation
-        system, which is almost always GPS, is at any given moment. The GPSJam map
-        aggregates that data over 24 hours in time bins it into a hexagonal map.
-        Green hexagons show where more than 98% of all aircraft who flew through
-        that area reported good navigation accuracy. Yellow hexagons show where
-        between 2% and 10% of aircraft reported low navigation accuracy. Red
-        hexagons show where more than 10% of aircraft reported low navigation
-        accuracy.</p>
+            <p>Many aircraft broadcast information about how accurate their navigation
+                system, which is almost always GPS, is at any given moment. The GPSJam map
+                aggregates that data over 24 hours in time bins it into a hexagonal map.
+                Green hexagons show where more than 98% of all aircraft who flew through
+                that area reported good navigation accuracy. Yellow hexagons show where
+                between 2% and 10% of aircraft reported low navigation accuracy. Red
+                hexagons show where more than 10% of aircraft reported low navigation
+                accuracy.</p>
 
-    <h2 id="what-is-the-source-of-your-data">What is the source of your data?</h2>
+            <h2 id="what-is-the-source-of-your-data">What is the source of your data?</h2>
 
-    <p>Many aircraft broadcast digital radio messages (ADS-B) that contain
-        information about their GPS accuracy. <a href="https://adsbexchange.com">ADS-B
-            Exchange</a> is a network of thousands of enthusiasts who receive those
-        signals. I use the <a href="https://www.adsbexchange.com/data/">ADS-B
-            Exchange API</a> to collect and process the data and build maps from it.
-    </p>
+            <p>Many aircraft broadcast digital radio messages (ADS-B) that contain
+                information about their GPS accuracy. <a href="https://adsbexchange.com">ADS-B
+                    Exchange</a> is a network of thousands of enthusiasts who receive those
+                signals. I use the <a href="https://www.adsbexchange.com/data/">ADS-B
+                    Exchange API</a> to collect and process the data and build maps from it.
+            </p>
 
-    <h2 id="what-can-cause-aircraft-to-report-low-accuracy">What can cause an aircraft to report low navigation accuracy?</h2>
+            <h2 id="what-can-cause-aircraft-to-report-low-accuracy">What can cause an aircraft to report low navigation
+                accuracy?</h2>
 
-    <p>Most aircraft with ADS-B are using GPS, and from what I can tell the most
-        common reason for aircraft GPS systems to have degraded accuracy is jamming
-        by military systems. At least, the vast majority of aircraft that I see with
-        bad GPS accuracy are flying near conflict zones where GPS jamming is known
-        to occur.</p>
+            <p>Most aircraft with ADS-B are using GPS, and from what I can tell the most
+                common reason for aircraft GPS systems to have degraded accuracy is jamming
+                by military systems. At least, the vast majority of aircraft that I see with
+                bad GPS accuracy are flying near conflict zones where GPS jamming is known
+                to occur.</p>
 
-    <p>Other causes of low GPS accuracy:</p>
-    <ul>
-        <li>Testing of military jamming systems outside of conflict zones
-            (common in the southwestern United States)</li>
-        <li>Jamming systems used to protect Russian oligarchs from drones</li>
-    </ul>
+            <p>Other causes of low GPS accuracy:</p>
+            <ul>
+                <li>Testing of military jamming systems outside of conflict zones
+                    (common in the southwestern United States)</li>
+                <li>Jamming systems used to protect Russian oligarchs from drones</li>
+            </ul>
 
-    <h2 id="what-are-the-conflict-zones">What are the conflict zones where GPS jamming is regularly observed?</h2>
+            <h2 id="what-are-the-conflict-zones">What are the conflict zones where GPS jamming is regularly observed?
+            </h2>
 
-    <p>The conflict zones where I've most often observed GPS jamming include the following:
-    <ul>
-        <li>Much of the Middle East, especially including the eastern
-            Mediterranean. Iraq, Lebanon, Cyprus, Turkey, Armenia all regularly see
-            GPS jamming activity. In North Africa, Libya.</li>
-        <li>In Europe, Poland, Romania, Lithuania, Latvia, Kaliningrad, and
-            Finland sometimes show presumed jamming activity, depending on how
-            active Russia is.</li>
-    </ul>
-    </p>
+            <p>The conflict zones where I've most often observed GPS jamming include the following:
+            <ul>
+                <li>Much of the Middle East, especially including the eastern
+                    Mediterranean. Iraq, Lebanon, Cyprus, Turkey, Armenia all regularly see
+                    GPS jamming activity. In North Africa, Libya.</li>
+                <li>In Europe, Poland, Romania, Lithuania, Latvia, Kaliningrad, and
+                    Finland sometimes show presumed jamming activity, depending on how
+                    active Russia is.</li>
+            </ul>
+            </p>
 
-    <h2 id="what-time-zone">What time zone are the dates in?</h2>
+            <h2 id="what-time-zone">What time zone are the dates in?</h2>
 
-    <p>UTC.</p>
+            <p>UTC.</p>
 
-    <h2 id="when-is-the-site-updated">When is the site updated with new data?</h2>
+            <h2 id="when-is-the-site-updated">When is the site updated with new data?</h2>
 
-    <p>
-        Every 24 hours, soon after midnight UTC.
-    </p>
+            <p>
+                Every 24 hours, soon after midnight UTC.
+            </p>
 
-    <h2 id="i-live-in-one-of-the-red-zones">I live in one of the red zones and my GPS was fine?</h2>
+            <h2 id="i-live-in-one-of-the-red-zones">I live in one of the red zones and my GPS was fine?</h2>
 
-    <p>
-        The map is based on aircraft reports, and aircraft fly thousands of feet
-        above the ground where they have line-of-sight to many more potential
-        sources of GPS interference than you do on the ground. The map also
-        aggregates a 24 hour period, so it's possible for interference to be
-        present for a short time, still affect lots of aircraft and result in a
-        region being colored red, but GPS was still fine for most of the day.
-    </p>
+            <p>
+                The map is based on aircraft reports, and aircraft fly thousands of feet
+                above the ground where they have line-of-sight to many more potential
+                sources of GPS interference than you do on the ground. The map also
+                aggregates a 24 hour period, so it's possible for interference to be
+                present for a short time, still affect lots of aircraft and result in a
+                region being colored red, but GPS was still fine for most of the day.
+            </p>
+
+            <h2 id="why-arent-there-red-or-green">Why aren't there red or green hexes on some parts of the map?</h2>
+
+            <p>
+                That's where there were either no aircraft flying with ADS-B
+                (for example, in an active war zone) or there were no receivers
+                feeding data to ADS-B Exchange.
+            </p>
+        </div>
+    </div>
 
 </body>
 
