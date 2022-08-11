@@ -43,11 +43,14 @@
             <nav id="TableOfContents">
                 <ul>
                     <li><a href="#what-exactly-does-this-map-show">What exactly does this map show?</a></li>
-                    <li><a href="#what-is-the-source-of-your-data">What is the source of your data?</a></li>
+                    <li><a href="#what-is-the-source-of-your-data">Where does this data come from?</a></li>
                     <li><a href="#is-it-just-gps">Is it just GPS? What about GLONASS, BeiDou, etc.?</a></li>
+                    <li><a href="#is-it-always-jamming">Does red and yellow always mean there's jamming?</a></li>
                     <li><a href="#what-can-cause-aircraft-to-report-low-accuracy">What can cause an aircraft to report
                             low navigation
                             accuracy?</a></li>
+                    <li><a href="#its-called-gpsjam">The site is called "GPSJam" but it might not be GPS or jamming?</a>
+                    </li>
                     <li><a href="#what-are-the-conflict-zones">What are the conflict zones where GPS jamming is
                             regularly observed?</a></li>
                     <li><a href="#what-time-zone">What time zone are the dates in?</a></li>
@@ -61,20 +64,21 @@
 
             <h2 id="what-exactly-does-this-map-show">What exactly does this map show?</h2>
 
-            <p>Many aircraft broadcast information about how accurate their navigation
-                system, which is almost always GPS, is at any given moment. The GPSJam map
-                aggregates that data over 24 hours in time bins it into a hexagonal map.
-                Green hexagons show where more than 98% of all aircraft who flew through
-                that area reported good navigation accuracy. Yellow hexagons show where
-                between 2% and 10% of aircraft reported low navigation accuracy. Red
-                hexagons show where more than 10% of aircraft reported low navigation
+            <p>Many aircraft broadcast information about how accurate their
+                navigation system (which is almost always GPS) is at any given
+                moment. The GPSJam map aggregates that data over 24 hours in time
+                bins it into a hexagonal map. Green hexagons show where more than
+                98% of all aircraft who flew through that area reported good
+                navigation accuracy. Yellow hexagons show where between 2% and 10%
+                of aircraft reported low navigation accuracy. Red hexagons show
+                where more than 10% of aircraft reported low navigation
                 accuracy.</p>
 
             <p>Areas where a significant percentage of aircraft report low
                 navigation accuracy seem to correlate well with areas of known and
                 suspected jamming activity.</p>
 
-            <h2 id="what-is-the-source-of-your-data">What is the source of your data?</h2>
+            <h2 id="what-is-the-source-of-your-data">Where does this data come from?</h2>
 
             <p>Many aircraft broadcast digital radio messages (ADS-B) that contain
                 information about their GPS accuracy. <a href="https://adsbexchange.com">ADS-B
@@ -83,12 +87,27 @@
                     Exchange API</a> to collect and process the data and build maps from it.
             </p>
 
-            <h2 id="is-it-just-gps">Is it just GPS? What about GLONASS, BeiDou, etc.?</h2>
-            <p>Yes. GPS is the only navigation system that is widely used in aviation.
-                GLONASS is a satellite system that is used in some areas of the world.
-                BeiDou is a satellite system that is used in some areas of the world.
-                Galileo is a satellite system that is used in some areas of the world.
-                BeiDou and GLONASS are not used in the same areas as GPS.
+            <h2 id="is-it-just-gps">Is it just GPS? What about GLONASS, BeiDou,
+                Galileo, and other GNSS?</h2>
+
+            <p>The ADS-B data used by this map includes information on the
+                <i>accuracy</i> of the navigation system used by each aircraft, but
+                doesn't specify the <i>type</i> of navigation system. It could be
+                GPS, another global navigation satellite system (GNSS) like GLONASS,
+                or it could be an <a href="https://en.wikipedia.org/wiki/Inertial_navigation_system">inertial
+                    navigation system (INS)</a>. My understanding is that most aircraft
+                are using GPS, so that's probably mostly what the map shows.
+            </p>
+
+            <h2 id="#is-it-always-jamming">Does red and yellow always mean there's jamming?</h2>
+            <p>No. Red and yellow hexes show where a significant number of
+                aircraft reported low navigation accuracy. This often seems to be in
+                regions where it's known or suspected that GPS jamming is occurring,
+                but the data doesn't tell me what's causing the low accuracy. See
+                the <a href="#what-can-cause-aircraft-to-report-low-accuracy">next
+                    question</a>.
+            </p>
+
             <h2 id="what-can-cause-aircraft-to-report-low-accuracy">What can cause an aircraft to report low navigation
                 accuracy?</h2>
 
@@ -104,6 +123,13 @@
                     (common in the southwestern United States)</li>
                 <li>Jamming systems used to protect Russian oligarchs from drones</li>
             </ul>
+
+            <h2 id="#its-called-gpsjam">The site is called "GPSJam" but it might not be GPS or jamming?</h2>
+
+            <p>That's right. The site is gpsjam.org, but the map might not show
+                GPS nor jamming. I just think "gpsjam.org" sounds better than
+                "potential-navigation-system-interference.org".
+            </p>
 
             <h2 id="what-are-the-conflict-zones">What are the conflict zones where GPS jamming is regularly observed?
             </h2>
