@@ -32,6 +32,7 @@
             h1 {
                 font-size: 1.2em;
             }
+
             input#datepicker {
                 font-size: 1.2em;
             }
@@ -59,6 +60,10 @@
         a {
             text-decoration: none;
             color: #df86fa
+        }
+        
+        a:hover {
+            color: #eabff8;
         }
 
         #content {
@@ -120,6 +125,26 @@
 
         input#datepicker.screenshot {
             font-size: 2em;
+        }
+
+        #dateissue {
+            background-color: #ffdd33;
+            color: black;
+            font-size: 0.8em;
+            text-align: center;
+            display: none;
+        }
+
+        #dateissue a {
+            color: #8a539b;
+        }
+
+        #dateissue a:hover {
+            color: #aa73bb;
+        }
+
+        #dateissue a.screenshot {
+            display: none;
         }
 
         @font-face {
@@ -196,6 +221,7 @@
         Daily maps of GPS interference<span class="infolinks maybe-screenshot"> <br /> <a href="/about/">About</a> | <a
                 href="/faq/">FAQ</a></span><br>
         <input id="datepicker" class="maybe-screenshot" type="date"><br>
+        <div id="dateissue">Data for this day is incomplete. <a class="maybe-screenshot" href="/faq/#incomplete-data">Learn more.</a></div>
     </div>
     <div id="map"></div>
     <div id="adsbx-credits-container">
@@ -289,9 +315,21 @@
             return false;
         }
 
+        function updateDataIssueDisplay(dateStr) {
+            if (dateInfo && dateInfo.byDate[dateStr] && dateInfo.byDate[dateStr].suspect) {
+                console.log(`${dateStr} is suspect`);
+                console.log(dateInfo.byDate[dateStr]);
+                document.getElementById('dateissue').style.display = 'block';
+            } else {
+                console.log(`${dateStr} is NOT suspect`);
+                document.getElementById('dateissue').style.display = 'none';
+            }
+        }
+
         function loadH3file(date, map) {
             // Convert date to a string like "2022-05-13" with zero-padding.
             const dateStr = formatDate(date);
+            updateDataIssueDisplay(dateStr);
             // document.getElementById('datepicker').value = dateStr;
             const h3Filename = dateStr + '-h3_4.csv'
             console.log(`Loading ${date} from ${h3Filename}`);
@@ -382,7 +420,7 @@
             console.log(`Added ${hexes[INTERFERENCE_HIGH].length} high hexes`);
             console.log(`${Date.now()} Adding sources and layers took ${(Date.now() - start)} ms`);
             map.on('idle', () => {
-                console.log(`Map idle in ${(Date.now() - pageStartTime)} ms`);
+                // console.log(`Map idle in ${(Date.now() - pageStartTime)} ms`);
                 map.fire('screenshot-ready');
             });
         }
@@ -416,8 +454,7 @@
                         console.log(`Set earliest date to ${dateInfo.earliestDate}`);
                         dateInfo.byDate = {};
                         for (let row of rows) {
-                            let date = parseUtcDate(row.date);
-                            dateInfo.byDate[date] = row.count;
+                            dateInfo.byDate[row.date] = { date: parseUtcDate(row.date), suspect: row.suspect === 'true', interference: row.num_bad_aircraft_hexes };
                         }
                         resolve(dateInfo);
                     }
@@ -437,7 +474,7 @@
             });
 
             map.on('screenshot-ready', () => {
-                console.log(`Screenshot ready in ${(Date.now() - pageStartTime)} ms`);
+                // console.log(`Screenshot ready in ${(Date.now() - pageStartTime)} ms`);
             });
             map.on('load', () => {
                 console.log(`Map loaded in ${(Date.now() - pageStartTime)} ms`);
@@ -501,6 +538,8 @@
                 dateInfo = await loadManifest();
                 datePicker.min = formatDate(dateInfo.earliestDate);
                 datePicker.max = formatDate(dateInfo.latestDate);
+                updateDataIssueDisplay(dateStr);
+
                 console.log(`Loaded manifest in ${(Date.now() - pageStartTime)} ms`);
             } else {
                 // If the URL doesn't contain a date, then load the date
