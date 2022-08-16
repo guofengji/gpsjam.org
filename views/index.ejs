@@ -264,6 +264,7 @@
         let mapCenter = [35, 45];
         let mapZoom = 3;
         let dateInfo;
+        let H3Resolution = 4;
         let map;
 
         // Parse string like "2022-05-13" into a Date.
@@ -331,7 +332,7 @@
             const dateStr = formatDate(date);
             updateDataIssueDisplay(dateStr);
             // document.getElementById('datepicker').value = dateStr;
-            const h3Filename = dateStr + '-h3_4.csv'
+            const h3Filename = `${dateStr}-h3_${H3Resolution}.csv`;
             console.log(`Loading ${date} from ${h3Filename}`);
             let url = 'data/' + h3Filename;
             // Loop over low, med, high and remove that layer.
