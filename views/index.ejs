@@ -11,6 +11,7 @@
     <script src="js/d3.v4.min.js"></script>
     <script src="js/h3-js"></script>
     <script src="js/geojson2h3.js"></script>
+    <script src="js/tweakpane-3.1.0.min.js"></script>
 
     <style>
         body {
@@ -61,7 +62,7 @@
             text-decoration: none;
             color: #df86fa
         }
-        
+
         a:hover {
             color: #eabff8;
         }
@@ -195,6 +196,20 @@
             opacity: 0.7;
             margin: 4px;
         }
+
+        /* Change the tweakpane font. See
+        https://github.com/cocopon/tweakpane/issues/395 */
+        :root {
+            --tp-font-family: 'B612';
+        }
+
+        .tp-rotv {
+            font-size: 12px;
+        }
+
+        #settings.screenshot {
+            display: none;
+        }
     </style>
 
     <!-- Opengraph Meta Tags -->
@@ -221,7 +236,9 @@
         Daily maps of GPS interference<span class="infolinks maybe-screenshot"> <br /> <a href="/about/">About</a> | <a
                 href="/faq/">FAQ</a></span><br>
         <input id="datepicker" class="maybe-screenshot" type="date"><br>
-        <div id="dateissue">Data for this day is incomplete. <a class="maybe-screenshot" href="/faq/#incomplete-data">Learn more.</a></div>
+        <div id="dateissue">Data for this day is incomplete. <a class="maybe-screenshot"
+                href="/faq/#incomplete-data">Learn more.</a></div>
+        <div id="settings" class="maybe-screenshot"></div>
     </div>
     <div id="map"></div>
     <div id="adsbx-credits-container">
@@ -265,7 +282,45 @@
         let mapZoom = 3;
         let dateInfo;
         let H3Resolution = 4;
+        let mapProjection = 'globe';
         let map;
+
+        const settingsGui = new Tweakpane.Pane({
+            title: "Settings",
+            container: document.getElementById('settings'),
+            expanded: false,
+        });
+        settingsGui.addBlade(
+            {
+                view: 'list',
+                label: 'Projection',
+                options: [
+                    { text: 'Globe', value: 'globe' },
+                    { text: 'Equal Earth', value: 'equalEarth' },
+                    { text: 'Natural Earth', value: 'naturalEarth' },
+                    { text: 'Winkel Tripel', value: 'winkelTripel' },
+                    { text: 'Albers', value: 'albers' },
+                    { text: 'Lambert Conformal Conic', value: 'lambertConformalConic' },
+                    { text: 'Equirectangular', value: 'equirectangular' },
+                    { text: 'Mercator', value: 'mercator' },
+                ],
+                value: 'globe',
+            }
+        ).on('change', (ev) => {
+            changeSelectProjection(ev);
+        });
+
+        function changeSelectProjection(ev) {
+            setMapProjection(ev.value);
+        }
+
+        const setMapProjection = (projection) => {
+            map.setProjection({
+                name: projection,
+                center: [0, 0]
+            });
+            syncStateToUrl();
+        }
 
         // Parse string like "2022-05-13" into a Date.
         function parseLocalDate(str) {
@@ -426,11 +481,12 @@
             });
         }
 
-        // Puts the current lat, lon, zoom, and date into the URL.
+        // Puts the current lat, lon, zoom, date, and projection into the URL.
         function syncStateToUrl() {
             const lat = map.getCenter().lat.toFixed(5);
             const lon = map.getCenter().lng.toFixed(5);
             const zoom = map.getZoom().toFixed(1);
+            const projection = map.getProjection().name;
             const dateStr = mapDate.getUTCFullYear() + "-" + ("0" + (mapDate.getUTCMonth() + 1)).slice(-2) + "-" + ("0" + mapDate.getUTCDate()).slice(-2)
             // Create a new URL based on the current URL plus the new lat, lon, zoom, and date.
             let url = new URL(window.location.href);
@@ -438,6 +494,11 @@
             url.searchParams.set('lon', lon);
             url.searchParams.set('z', zoom);
             url.searchParams.set('date', dateStr);
+            if (projection != 'globe') {
+                url.searchParams.set('proj', projection);
+            } else {
+                url.searchParams.delete('proj');
+            }
             window.history.replaceState({}, '', url.href);
         }
 
@@ -470,7 +531,7 @@
                 style: 'mapbox://styles/mapbox/streets-v11',
                 center: mapCenter,
                 zoom: mapZoom,
-                projection: 'globe',
+                projection: mapProjection,
                 // maxZoom: 6
             });
 
@@ -523,6 +584,11 @@
         if (urlParams.has('z')) {
             const zoom = parseFloat(urlParams.get('z'));
             mapZoom = zoom;
+        }
+
+        if (urlParams.has('proj')) {
+            const projection = urlParams.get('proj');
+            mapProjection = projection;
         }
 
         (async function () {
