@@ -159,9 +159,13 @@ class Previewer {
         return Promise.race([
             page.evaluate(() => {
                 return new Promise((resolve, reject) => {
-                    map.on('screenshot-ready', () => {
-                        resolve();
-                    });
+                    // Wait 100 ms and then check if the map is screenshot-ready.
+                    setTimeout(() => {
+                        map.on('screenshot-ready', () => {
+                            resolve();
+                        });
+                    },
+                        100);
                 });
             }),
             new Promise(resolve => setTimeout(resolve, seconds * 1000))
