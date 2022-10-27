@@ -173,7 +173,9 @@ class Previewer {
                         console.log("Checking map");
                         const map = window.map;
                         if (map) {
+                            console.log("Map exists: " + map);
                             clearInterval(interval);
+                            console.log("Installing listener");
                             map.on('screenshot-ready', () => {
                                 console.log("Screenshot ready event received");
                                 resolve();
