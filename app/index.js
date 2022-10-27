@@ -174,6 +174,7 @@ class Previewer {
                         const map = window.map;
                         if (map) {
                             console.log("Map exists: " + map);
+                            console.log(map.getCenter());
                             clearInterval(interval);
                             console.log("Installing listener");
                             map.on('screenshot-ready', () => {
