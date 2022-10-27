@@ -170,6 +170,7 @@ class Previewer {
                     console.log("Promise is running");
                     // Check every 100 ms if the map object exists, and install a listener for the screenshot-ready event if it does.
                     const interval = setInterval(() => {
+                        console.log("Checking map");
                         const map = window.map;
                         if (map) {
                             clearInterval(interval);
