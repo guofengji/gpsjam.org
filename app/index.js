@@ -165,9 +165,11 @@ class Previewer {
         // Use race to implement a timeout.
         return Promise.race([
             page.evaluate(() => {
+                console.log("in page.evaluate");
                 return new Promise((resolve, reject) => {
                     // Check every 100 ms if the map object exists, and install a listener for the screenshot-ready event if it does.
                     const interval = setInterval(() => {
+                        console.log("checking if map exists.");
                         if (map) {
                             clearInterval(interval);
                             console.log("Installing map screenshot-ready listener");
