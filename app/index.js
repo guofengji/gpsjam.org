@@ -166,6 +166,7 @@ class Previewer {
                         if (map) {
                             clearInterval(interval);
                             map.on('screenshot-ready', () => {
+                                console.log("Screenshot ready event received");
                                 resolve();
                             });
                         }
