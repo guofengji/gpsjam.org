@@ -127,6 +127,13 @@ class Previewer {
                 this.browserUseCount = 0;
             }
             const page = await this.browser.newPage();
+            page.on('console', async (msg) => {
+                const msgArgs = msg.args();
+                for (let i = 0; i < msgArgs.length; ++i) {
+                    console.log(await msgArgs[i].jsonValue());
+                }
+            });
+    
             this.browserUseCount += 1;
 
             // set the viewport size
@@ -156,12 +163,6 @@ class Previewer {
     async waitForScreenshotReady(page, seconds) {
         seconds = seconds || 30;
         console.log("Waiting for screenshot ready");
-        page.on('console', async (msg) => {
-            const msgArgs = msg.args();
-            for (let i = 0; i < msgArgs.length; ++i) {
-                console.log(await msgArgs[i].jsonValue());
-            }
-        });
         // Use race to implement a timeout.
         return Promise.race([
             page.evaluate(() => {
