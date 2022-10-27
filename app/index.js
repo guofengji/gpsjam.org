@@ -127,6 +127,7 @@ class Previewer {
                 this.browserUseCount = 0;
             }
             const page = await this.browser.newPage();
+            // Log messages from the page to the server console.
             page.on('console', async (msg) => {
                 const msgArgs = msg.args();
                 for (let i = 0; i < msgArgs.length; ++i) {
@@ -182,7 +183,7 @@ class Previewer {
                     }, 100);
                 });
             }),
-            new Promise(resolve => setTimeout(resolve, seconds * 1000))
+            new Promise((resolve, reject) => setTimeout(reject, seconds * 1000))
         ]);
     }
 
