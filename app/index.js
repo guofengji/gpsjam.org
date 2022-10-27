@@ -156,10 +156,18 @@ class Previewer {
     async waitForScreenshotReady(page, seconds) {
         seconds = seconds || 30;
         console.log("Waiting for screenshot ready");
+        page.on('console', async (msg) => {
+            const msgArgs = msg.args();
+            for (let i = 0; i < msgArgs.length; ++i) {
+                console.log(await msgArgs[i].jsonValue());
+            }
+        });
         // Use race to implement a timeout.
         return Promise.race([
             page.evaluate(() => {
+                console.log("Hello");
                 return new Promise((resolve, reject) => {
+                    console.log("Promise is running");
                     // Check every 100 ms if the map object exists, and install a listener for the screenshot-ready event if it does.
                     const interval = setInterval(() => {
                         const map = window.map;
