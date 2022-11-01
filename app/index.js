@@ -172,7 +172,7 @@ class Previewer {
                     // Check every 100 ms if the map object exists, and install a listener for the screenshot-ready event if it does.
                     let numChecks = 0;
                     const interval = setInterval(() => {
-                        console.log("checking if map exists.");
+                        // console.log("checking if map exists.");
                         if (map) {
                             clearInterval(interval);
                             console.log("Installing map screenshot-ready listener");
@@ -182,7 +182,8 @@ class Previewer {
                             });
                         } else {
                             numChecks += 1;
-                            if (numChecks > 300) {
+                            if (numChecks > 350) {
+                                console.log("Giving up waiting for map to load");
                                 clearInterval(interval);
                                 reject("Timed out waiting for map to load");
                             }
