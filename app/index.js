@@ -170,7 +170,7 @@ class Previewer {
                 console.log("in page.evaluate");
                 return new Promise((resolve, reject) => {
                     // Check every 100 ms if the map object exists, and install a listener for the screenshot-ready event if it does.
-                    let numChecks = 0;
+                    // let numChecks = 0;
                     const interval = setInterval(() => {
                         // console.log("checking if map exists.");
                         if (map) {
@@ -180,14 +180,15 @@ class Previewer {
                                 console.log("Screenshot ready event received");
                                 resolve();
                             });
-                        } else {
-                            numChecks += 1;
-                            if (numChecks > 350) {
-                                console.log("Giving up waiting for map to load");
-                                clearInterval(interval);
-                                reject("Timed out waiting for map to load");
-                            }
                         }
+                        //  else {
+                        //     numChecks += 1;
+                        //     if (numChecks > 350) {
+                        //         console.log("Giving up waiting for map to load");
+                        //         clearInterval(interval);
+                        //         reject("Timed out waiting for map to load");
+                        //     }
+                        // }
                     }, 100);
                 });
             }),
