@@ -100,7 +100,7 @@ class Previewer {
                     this.urlsInProgress[urlStr] = [{ resolve, reject }];
                     const image = await this.getPreviewInternal(url);
                     await redisClient.set(urlStr, image);
-                    console.log(`Cache now has ${this.cache.size} entries. Queue has ${Object.keys(this.urlsInProgress).length - 1} entries.`);
+                    console.log(`Queue has ${Object.keys(this.urlsInProgress).length - 1} entries.`);
                     // Notify anyone else who was waiting for this url (since
                     // we've put the image in the cache, no more requests will
                     // be added to the queue for this url so urlsInProgress
