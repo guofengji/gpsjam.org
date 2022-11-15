@@ -4,10 +4,20 @@ const path = require('path')
 const Mutex = require('async-mutex').Mutex;
 const compression = require('compression');
 const express = require("express");
-const LRU = require('lru-cache');
 const puppeteer = require("puppeteer");
+const redis = require("redis");
 
 const PORT = process.env.PORT || 3000;
+
+
+let redisClient;
+
+(async () => {
+    redisClient = redis.createClient();
+    redisClient.on("error", (error) => console.error(`Error : ${error}`));
+    await redisClient.connect();
+})();
+
 
 app = express();
 
@@ -56,13 +66,12 @@ app.listen(PORT, function () {
 // 1. Uses puppeteer to render the page at a given URL and return a PNG.
 // 2. Serializes puppeteer usage so we only screenshot one page at a time, to
 //    keep memory usage down.
-// 3. Caches screenshots (in memory) so we don't have to re-render a particular
+// 3. Caches screenshots (in redis) so we don't have to re-render a particular
 //    URL every time.
 class Previewer {
     constructor() {
         this.browser = null;
         this.browserUseCount = 0;
-        this.cache = new LRU({ max: 100 });
         this.cacheHits = 0;
         this.cacheMisses = 0;
         this.browserMutex = new Mutex();
@@ -72,7 +81,7 @@ class Previewer {
     async getPreview(url) {
         const urlStr = url.toString();
         return new Promise(async (resolve, reject) => {
-            const cachedImage = this.cache.get(urlStr);
+            const cachedImage = await redisClient.get(urlStr);
             if (cachedImage) {
                 // If the url is already in the cache, we're done.
                 this.cacheHits += 1;
@@ -90,7 +99,7 @@ class Previewer {
                     console.log(`Getting screenshot of ${url}. Cache hit rate ${(this.cacheHits / (this.cacheHits + this.cacheMisses)).toFixed(2)}`);
                     this.urlsInProgress[urlStr] = [{ resolve, reject }];
                     const image = await this.getPreviewInternal(url);
-                    this.cache.set(urlStr, image);
+                    await redisClient.set(urlStr, image);
                     console.log(`Cache now has ${this.cache.size} entries. Queue has ${Object.keys(this.urlsInProgress).length - 1} entries.`);
                     // Notify anyone else who was waiting for this url (since
                     // we've put the image in the cache, no more requests will
@@ -134,7 +143,7 @@ class Previewer {
                     console.log(await msgArgs[i].jsonValue());
                 }
             });
-    
+
             this.browserUseCount += 1;
 
             // set the viewport size
