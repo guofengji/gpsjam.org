@@ -81,7 +81,7 @@ class Previewer {
     async getPreview(url) {
         const urlStr = url.toString();
         return new Promise(async (resolve, reject) => {
-            const cachedImage = await redisClient.get(urlStr);
+            const cachedImage = await redisClient.get(redis.commandOptions({ returnBuffers: true }), urlStr);
             if (cachedImage) {
                 // If the url is already in the cache, we're done.
                 this.cacheHits += 1;
