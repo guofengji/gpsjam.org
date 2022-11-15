@@ -95,9 +95,9 @@ class Previewer {
                     console.log(`Waiting for screenshot of ${url}, already in progress. Queue has ${Object.keys(this.urlsInProgress).length} items.`);
                 } else {
                     // OK, fine, it's up to us to render this url.
+                    this.urlsInProgress[urlStr] = [{ resolve, reject }];
                     this.cacheMisses += 1;
                     console.log(`Getting screenshot of ${url}. Cache hit rate ${(this.cacheHits / (this.cacheHits + this.cacheMisses)).toFixed(2)}`);
-                    this.urlsInProgress[urlStr] = [{ resolve, reject }];
                     try {
                         const image = await this.getPreviewInternal(url);
                         await redisClient.set(urlStr, image);
