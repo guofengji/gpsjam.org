@@ -98,16 +98,24 @@ class Previewer {
                     this.cacheMisses += 1;
                     console.log(`Getting screenshot of ${url}. Cache hit rate ${(this.cacheHits / (this.cacheHits + this.cacheMisses)).toFixed(2)}`);
                     this.urlsInProgress[urlStr] = [{ resolve, reject }];
-                    const image = await this.getPreviewInternal(url);
-                    await redisClient.set(urlStr, image);
-                    console.log(`Queue has ${Object.keys(this.urlsInProgress).length - 1} entries.`);
-                    // Notify anyone else who was waiting for this url (since
-                    // we've put the image in the cache, no more requests will
-                    // be added to the queue for this url so urlsInProgress
-                    // won't be changed under our noses).
-                    this.urlsInProgress[urlStr].forEach(({ resolve, reject }) => {
-                        resolve(image);
-                    });
+                    try {
+                        const image = await this.getPreviewInternal(url);
+                        await redisClient.set(urlStr, image);
+                        console.log(`Queue has ${Object.keys(this.urlsInProgress).length - 1} entries.`);
+                        // Notify anyone else who was waiting for this url (since
+                        // we've put the image in the cache, no more requests will
+                        // be added to the queue for this url so urlsInProgress
+                        // won't be changed under our noses).
+                        this.urlsInProgress[urlStr].forEach(({ resolve, reject }) => {
+                            resolve(image);
+                        });
+                    }
+                    catch (e) {
+                        console.error(`Error getting screenshot of ${url}: ${e}`);
+                        this.urlsInProgress[urlStr].forEach(({ resolve, reject }) => {
+                            reject(e);
+                        });
+                    }
                     delete this.urlsInProgress[urlStr];
                 }
             }
