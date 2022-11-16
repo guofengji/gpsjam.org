@@ -60,6 +60,7 @@
                     <li><a href="#why-arent-there-red-or-green">Why aren't there red or green hexes on some parts of the
                             map?</a></li>
                     <li><a href="#whats-that-cool-background-image">What's that cool background image on some pages?</a></li>
+                    <li><a href="#how-is-the-percentage-calculated">How is the percentage of bad aircraft calculated?</a></li>
                     <li><a href="#incomplete-data">Is the data complete?</a></li>
                 </ul>
             </nav>
@@ -207,6 +208,22 @@
             <p>
                 <a href="/images/eastern-med-2022-03-05.webp"><img style="width: 100%;"
                         src="/images/eastern-med-2022-03-05.webp"></a>
+            </p>
+
+            <h2 id="how-is-the-percentage-calculated">How is the percentage of bad aircraft calculated?</h2>
+            <p>
+                The formula used for each hex is <code>percent_bad_aircraft =
+                100 * (num_bad_aircraft - 1) / (num_good_aircraft +
+                count_bad_aircraft)</code>, where <code>num_bad_aircraft</code>
+                is the number of aircraft that flew through the hex in the 24
+                hour period that reported good navigation accuracy, and
+                <code>num_good_aircraft</code> is the number of aircraft that
+                flew through the hex in the 24 hour period that reported bad
+                nagivation accuracy. I subtract 1 from the count of bad aircraft
+                to limit possible false positives in hexes through which only a
+                small number of aircraft flew. This attempt at denoising the
+                data does bias the map to not show potential interference in
+                hexes where there's very little data.
             </p>
 
             <h2 id="incomplete-data">Is the data complete?</h2>
