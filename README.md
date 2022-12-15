@@ -8,6 +8,18 @@ one CSV file. The site could be entirely static except for its support of social
 media preview thumbnails, which are generated dynamically, so it's actually a
 very simple [Express](https://expressjs.com) app.
 
+## Trying it
+
+```
+npm install
+npm run start
+```
+
+Then visit http://localhost:3000/. The mapbox basemap won't load, and
+there will be errors on the console because it can't find redis, but
+otherwise it works. :)
+
+
 ## Operations
 
 The site runs on an AWS VPS using a bitnami image.
