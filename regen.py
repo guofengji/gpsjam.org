@@ -53,8 +53,14 @@ def main(args):
     print("Std Dev: {}".format(std_dev))
     print("Suspect dates:")
     for date in all_num_aircraft_hexes:
-        if abs(all_num_aircraft_hexes[date] - mean) > 2 * std_dev:
+        if possibly_incomplete_data(all_num_aircraft_hexes[date], mean, std_dev, date):
             print("{}: {}".format(date, all_num_aircraft_hexes[date]))
+            print(
+                "            num_aircraft: {}  mean: {}  mean - 2 * std_dev: {}".format(
+                    all_num_aircraft_hexes[date], mean, mean - 2 * std_dev
+                )
+            )
+            print("%.1f" % (abs(all_num_aircraft_hexes[date] - mean) / std_dev))
 
     dates = sorted(dates)
     with open("public/data/manifest.csv", "w") as f:
@@ -66,11 +72,24 @@ def main(args):
                 {
                     "date": date,
                     "suspect": json.dumps(
-                        abs(all_num_aircraft_hexes[date] - mean) > 2 * std_dev
+                        possibly_incomplete_data(all_num_aircraft_hexes[date], mean, std_dev, date)
                     ),
                     "num_bad_aircraft_hexes": all_num_bad_hexes[date],
                 }
             )
+
+
+def possibly_incomplete_data(num_aircraft: int, mean: float, std_dev: float, date: str) -> bool:
+    # If the number of aircraft hexes is more than 2 standard deviations
+    # away from the mean, then it's suspect. Unless it's Christmas!
+    if date.endswith("-12-25"):
+        num_std_devs = 3
+    else:
+        num_std_devs = 2
+    if abs(num_aircraft - mean) > num_std_devs * std_dev:
+        return True
+    else:
+        return False
 
 
 if __name__ == "__main__":
