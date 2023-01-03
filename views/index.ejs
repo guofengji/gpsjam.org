@@ -293,15 +293,21 @@
 
         // Add a text box for search. When text is entered, use OSM's nominatim
         // to geocode and pan/zoom the map there.
+        let ignorePlaceChange = false;
+
         const locationBlade = settingsGui.addBlade({
             view: 'text',
             label: 'Search for a place',
             parse: (v) => String(v),
             value: '',
         }).on('change', (ev) => {
+            if (ignorePlaceChange) {
+                ignorePlaceChange = false;
+                return;
+            }
             searchLocation(ev.value);
         });
-
+        
         const searchLocation = (place) => {
             // uriencode place, use nominatim to geocode, get the bounds and fit
             // the map to those bounds.
@@ -319,6 +325,7 @@
                         map.setProjection({name: "mercator"});
                         map.fitBounds([[bounds[2], bounds[0]], [bounds[3], bounds[1]]]);
                         map.setProjection({name: 'globe'});
+                        ignorePlaceChange = true;
                         locationBlade.value = data[0].display_name;
                     }
                 });
