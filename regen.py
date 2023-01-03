@@ -52,15 +52,9 @@ def main(args):
     print("Mean: {}".format(mean))
     print("Std Dev: {}".format(std_dev))
     print("Suspect dates:")
-    for date in all_num_aircraft_hexes:
+    for date in sorted(all_num_aircraft_hexes):
         if possibly_incomplete_data(all_num_aircraft_hexes[date], mean, std_dev, date):
-            print("{}: {}".format(date, all_num_aircraft_hexes[date]))
-            print(
-                "            num_aircraft: {}  mean: {}  mean - 2 * std_dev: {}".format(
-                    all_num_aircraft_hexes[date], mean, mean - 2 * std_dev
-                )
-            )
-            print("%.1f" % (abs(all_num_aircraft_hexes[date] - mean) / std_dev))
+            print("{}: {} hexes; off by {} stddevs".format(date, all_num_aircraft_hexes[date], (all_num_aircraft_hexes[date] - mean) / std_dev)),
 
     dates = sorted(dates)
     with open("public/data/manifest.csv", "w") as f:
@@ -72,7 +66,7 @@ def main(args):
                 {
                     "date": date,
                     "suspect": json.dumps(
-                        possibly_incomplete_data(all_num_aircraft_hexes[date], mean, std_dev, date)
+                        possibly_incomplete_data(all_num_aircraft_hexes[date], mean, std_dev, date) 
                     ),
                     "num_bad_aircraft_hexes": all_num_bad_hexes[date],
                 }
