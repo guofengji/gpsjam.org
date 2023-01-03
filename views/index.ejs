@@ -286,10 +286,43 @@
         let map;
 
         const settingsGui = new Tweakpane.Pane({
-            title: "Settings",
+            title: "More",
             container: document.getElementById('settings'),
             expanded: false,
         });
+
+        // Add a text box for search. When text is entered, use OSM's nominatim
+        // to geocode and pan/zoom the map there.
+        settingsGui.addBlade({
+            view: 'text',
+            label: 'Search for a place',
+            parse: (v) => String(v),
+            value: '',
+        }).on('change', (ev) => {
+            searchLocation(ev.value);
+        });
+
+        const searchLocation = (place) => {
+            // uriencode place, use nominatim to geocode, get the bounds and fit
+            // the map to those bounds.
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(place)}&format=json&polygon_geojson=1&addressdetails=1&limit=1`;
+            fetch(url,
+                {
+                    headers: {
+                        'Referer': 'https://gpsjam.org/',
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.length > 0) {
+                        const bounds = data[0].boundingbox;
+                        map.setProjection({name: "mercator"});
+                        map.fitBounds([[bounds[2], bounds[0]], [bounds[3], bounds[1]]]);
+                        map.setProjection({name: 'globe'});
+                    }
+                });
+        }
+
         settingsGui.addBlade(
             {
                 view: 'list',
