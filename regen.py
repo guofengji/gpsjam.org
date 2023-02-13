@@ -22,13 +22,20 @@ def process_file(path: str) -> Optional[Tuple[str, int, int]]:
     with open(path, "r") as f:
         num_aircraft_hexes = 0
         lines = f.readlines()[1:]
-        for l in lines:
-            pieces = l.split(",")
-            num_good_aircraft = int(pieces[1])
-            num_bad_aircraft = int(pieces[2])
-            num_aircraft_hexes += num_good_aircraft + num_bad_aircraft
-            if (num_bad_aircraft - 1) / (num_good_aircraft + num_bad_aircraft) >= 0.10:
-                num_bad_hexes += 1
+        for i, l in enumerate(lines):
+            try:
+                pieces = l.split(",")
+                num_good_aircraft = int(pieces[1])
+                num_bad_aircraft = int(pieces[2])
+                num_aircraft_hexes += num_good_aircraft + num_bad_aircraft
+                if (num_bad_aircraft - 1) / (num_good_aircraft + num_bad_aircraft) >= 0.10:
+                    num_bad_hexes += 1
+            except Exception as e:
+                sys.stderr.write("Error on line {} of {}: {}\n".format(i + 1, path, e))
+                # Print the line.
+                sys.stderr.write(l)
+                sys.stderr.write("\n\n")
+                sys.exit(1)
     return (date, num_aircraft_hexes, num_bad_hexes)
 
 
