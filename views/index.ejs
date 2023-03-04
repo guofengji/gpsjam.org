@@ -307,7 +307,7 @@
             }
             searchLocation(ev.value);
         });
-        
+
         const searchLocation = (place) => {
             // uriencode place, use nominatim to geocode, get the bounds and fit
             // the map to those bounds.
@@ -322,9 +322,9 @@
                 .then((data) => {
                     if (data.length > 0) {
                         const bounds = data[0].boundingbox;
-                        map.setProjection({name: "mercator"});
+                        map.setProjection({ name: "mercator" });
                         map.fitBounds([[bounds[2], bounds[0]], [bounds[3], bounds[1]]]);
-                        map.setProjection({name: 'globe'});
+                        map.setProjection({ name: 'globe' });
                         ignorePlaceChange = true;
                         locationBlade.value = data[0].display_name;
                     }
