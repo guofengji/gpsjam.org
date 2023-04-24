@@ -143,7 +143,7 @@ date,suspect,num_bad_aircraft_hexes
 2022-07-05,false,146
 2022-07-06,false,115
 2022-07-07,false,125
-2022-07-08,false,125
+2022-07-08,true,125
 2022-07-09,false,136
 2022-07-10,false,161
 2022-07-11,false,110
@@ -430,3 +430,6 @@ date,suspect,num_bad_aircraft_hexes
 2023-04-18,false,263
 2023-04-19,false,220
 2023-04-20,false,250
+2023-04-21,false,234
+2023-04-22,false,277
+2023-04-23,false,271
